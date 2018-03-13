@@ -281,9 +281,23 @@ begin
   --dir_blue
  
   -- koristeci signale realizovati logiku koja pise po TXT_MEM
-  char_address <= "00000000100100";
-  char_value <= "00" & x"b";
-  char_we <= '1';
+  char_we<= '1';
+	
+		process(pix_clock_s,reset_n_i)begin
+			if(reset_n_i='0')then
+				char_address<=(others=>'0');
+			elsif(pix_clock_s = '1')then
+				if(char_we='1')then
+					char_address<=char_address+1;
+				elsif(char_address<="0001001011000000")then
+						char_address<=(others=>'0');
+				else char_address<=char_address;
+			end if;
+			end if;
+		end process;
+	
+	char_value<="000011" when (char_address="000000"&x"02")else
+				 "100000";
   
   -- koristeci signale realizovati logiku koja pise po GRAPH_MEM
   --pixel_address
